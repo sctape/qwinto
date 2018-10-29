@@ -1,32 +1,70 @@
-.App {
+.row {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  margin-bottom: 5px;
+  border: solid 1px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.row.orange {
+  left: 74px;
+  background-color: #e56329;
+}
+
+.row.yellow {
+  left: 37px;
+  background-color: #f5dd32;
+}
+
+.row.purple {
+  background-color: #5a3787;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.cell-container {
+  border-right: 1px solid;
+  padding: 2px;
+  width: 32px;
+  height: 32px;
+}
+
+.cell-container:last-child {
+  border: none;
+}
+
+.cell {
+  border: 1px solid #666;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background-color: #fff;
+}
+
+.cell.bonus {
+  background: url("pentagon.svg");
+  background-size: 32px 30px;
+  border-radius: 0;
+  border: none;
+  height: 30px;
+  width: 32px
+}
+
+.cell input {
+  height: 20px;
+  width: 20px;
+  border: none;
+  position: relative;
+  top: 5px;
+  left: 5px;
+  padding: 0;
   text-align: center;
+  background: transparent;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.cell input:focus {
+  outline: none;
 }
