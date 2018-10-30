@@ -22,6 +22,7 @@ class Row extends Component {
           column={ column }
           hidden={ this.props.hiddenCells.includes(column)}
           bonus={ this.props.bonusCells.includes(column)}
+          key={`${this.props.row}-${column}`}
         />) }
       </div>
     )
