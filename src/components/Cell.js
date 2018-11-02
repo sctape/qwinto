@@ -9,11 +9,16 @@ class Cell extends PureComponent {
     value: PropTypes.number,
     hidden: PropTypes.bool.isRequired,
     bonus: PropTypes.bool.isRequired,
+    updateScore: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     hidden: false,
     bonus: false,
+  };
+
+  handleChange = (event) => {
+    this.props.updateScore(event.target.value);
   };
 
   render() {
@@ -22,7 +27,7 @@ class Cell extends PureComponent {
     return (
       <div className={ classnames('cell-container')}>
         <div className={ classnames('cell', { 'hidden': hidden }, { 'bonus': bonus })}>
-          <input type="text" value={ value } name={ `${row}-${column}` }/>
+          <input type="text" value={ value } name={ `${row}-${column}` } onChange={ this.handleChange } />
         </div>
       </div>
     )

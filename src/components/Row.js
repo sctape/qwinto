@@ -12,6 +12,11 @@ class Row extends Component {
     cellStartIndex: PropTypes.number.isRequired,
     hiddenCells: PropTypes.array.isRequired,
     bonusCells: PropTypes.array.isRequired,
+    updateScore: PropTypes.func.isRequired,
+  };
+
+  updateScore = column => value => {
+    return this.props.updateScore(column, value);
   };
 
   render() {
@@ -23,6 +28,7 @@ class Row extends Component {
           hidden={ this.props.hiddenCells.includes(column)}
           bonus={ this.props.bonusCells.includes(column)}
           key={`${this.props.row}-${column}`}
+          updateScore={ this.updateScore(column) }
         />) }
       </div>
     )

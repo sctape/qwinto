@@ -1,7 +1,12 @@
 import { Record, Map } from 'immutable';
 
 export class Scores extends Record({
-  values: new Map()
+  id: null,
+  values: new Map(),
 }) {
-
+  getRow(row) {
+    return this.values.get(row, new Map())
+  }
 }
+
+export default Scores
