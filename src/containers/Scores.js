@@ -2,9 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Row from './../components/Row';
+import Die from './../components/Die';
 import ScoresModel from './../data/models/Scores';
 
 class Scores extends Component {
+
+  state = {
+    orangeDie: 1,
+    yellowDie: 1,
+    purpleDie: 1,
+    total: 3,
+    orangeDisabled: false,
+    yellowDisabled: false,
+    purpleDisabled: false,
+  };
 
   static propTypes = {
     scores: PropTypes.instanceOf(ScoresModel),
@@ -14,6 +25,35 @@ class Scores extends Component {
 
   updateScore = row => (column, value) => {
     return this.props.updateScore(this.props.scores.set('values', this.props.scores.values.setIn([row, column], value)));
+  };
+
+  rollDice = () => {
+    let state = {
+      total: 0,
+    };
+
+    if (!this.state.orangeDisabled) {
+      state.orangeDie =  Math.floor(Math.random() * 6) + 1;
+      state.total += state.orangeDie;
+    }
+
+    if (!this.state.yellowDisabled) {
+      state.yellowDie =  Math.floor(Math.random() * 6) + 1;
+      state.total += state.yellowDie;
+    }
+
+    if (!this.state.purpleDisabled) {
+      state.purpleDie =  Math.floor(Math.random() * 6) + 1;
+      state.total += state.purpleDie;
+    }
+
+    this.setState(state);
+  };
+
+  toggleDie = color => () => {
+    return this.setState(prevState => ({
+      [`${color}Disabled`]: !prevState[`${color}Disabled`],
+    }))
   };
 
   render() {
@@ -43,6 +83,17 @@ class Scores extends Component {
           updateScore={ this.updateScore('purple')}
           scores={ this.props.scores.getRow('purple') }
         /><br/>
+        <div>
+          <Die pips={ this.state.orangeDie } disabled={ this.state.orangeDisabled } color="orange" onClick={ this.toggleDie('orange') } />
+          <Die pips={ this.state.yellowDie } disabled={ this.state.yellowDisabled } color="yellow" onClick={ this.toggleDie('yellow') } />
+          <Die pips={ this.state.purpleDie } disabled={ this.state.purpleDisabled } color="purple" onClick={ this.toggleDie('purple') } />
+          { this.state.total }
+        </div>
+        <div>
+          <button onClick={ this.rollDice }>
+            Roll!
+          </button>
+        </div>
       </div>
     )
   }

@@ -68,3 +68,28 @@
 .cell input:focus {
   outline: none;
 }
+
+.die {
+  width: 60px;
+  height: 60px;
+}
+
+.die.orange rect {
+  fill: #e56329;
+}
+
+.die.yellow rect {
+  fill: #f5dd32;
+}
+
+.die.purple rect {
+  fill: #5a3787;
+}
+
+.die.disabled {
+  opacity: .3;
+}
+
+.die.yellow.disabled {
+  opacity: .4;
+}
