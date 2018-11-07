@@ -15,6 +15,7 @@ class Scores extends Component {
     orangeDisabled: false,
     yellowDisabled: false,
     purpleDisabled: false,
+    rolling: null,
   };
 
   static propTypes = {
@@ -23,31 +24,50 @@ class Scores extends Component {
     updateScore: PropTypes.func.isRequired,
   };
 
-  updateScore = row => (column, value) => {
-    return this.props.updateScore(this.props.scores.set('values', this.props.scores.values.setIn([row, column], value)));
+  updateScore = row => column => {
+    if (!this.props.scores.isAvailable(row, column, this.state.total)) {
+      return;
+    }
+
+    if (this.state[`${row}Disabled`]) {
+      return;
+    }
+
+    return this.props.updateScore(this.props.scores.set('values', this.props.scores.values.setIn([row, column], this.state.total)));
   };
 
   rollDice = () => {
-    let state = {
-      total: 0,
-    };
+    this.setState({ rolling: true});
 
-    if (!this.state.orangeDisabled) {
-      state.orangeDie =  Math.floor(Math.random() * 6) + 1;
-      state.total += state.orangeDie;
-    }
+    const rollingDice = setInterval(() => {
+      const state = {};
 
-    if (!this.state.yellowDisabled) {
-      state.yellowDie =  Math.floor(Math.random() * 6) + 1;
-      state.total += state.yellowDie;
-    }
+      if (!this.state.orangeDisabled) {
+        state.orangeDie =  Math.floor(Math.random() * 6) + 1;
+        state.total += state.orangeDie;
+      }
 
-    if (!this.state.purpleDisabled) {
-      state.purpleDie =  Math.floor(Math.random() * 6) + 1;
-      state.total += state.purpleDie;
-    }
+      if (!this.state.yellowDisabled) {
+        state.yellowDie =  Math.floor(Math.random() * 6) + 1;
+        state.total += state.yellowDie;
+      }
 
-    this.setState(state);
+      if (!this.state.purpleDisabled) {
+        state.purpleDie =  Math.floor(Math.random() * 6) + 1;
+        state.total += state.purpleDie;
+      }
+
+      this.setState(state);
+    }, 200);
+
+    setTimeout(() => {
+      clearInterval(rollingDice);
+      this.setState(prevState => ({
+        rolling: null,
+        total: prevState.orangeDie + prevState.yellowDie + prevState.purpleDie,
+      }));
+    }, 1250);
+
   };
 
   toggleDie = color => () => {
@@ -65,7 +85,7 @@ class Scores extends Component {
           hiddenCells={ [5] }
           bonusCells={ [3, 7] }
           updateScore={ this.updateScore('orange')}
-          scores={ this.props.scores.getRow('orange') }
+          scores={ this.props.scores }
         /><br/>
         <Row
           row="yellow"
@@ -73,7 +93,7 @@ class Scores extends Component {
           hiddenCells={ [6] }
           bonusCells={ [8] }
           updateScore={ this.updateScore('yellow')}
-          scores={ this.props.scores.getRow('yellow') }
+          scores={ this.props.scores }
         /><br/>
         <Row
           row="purple"
@@ -81,17 +101,17 @@ class Scores extends Component {
           hiddenCells={ [4] }
           bonusCells={ [2, 9] }
           updateScore={ this.updateScore('purple')}
-          scores={ this.props.scores.getRow('purple') }
+          scores={ this.props.scores }
         /><br/>
         <div>
           <Die pips={ this.state.orangeDie } disabled={ this.state.orangeDisabled } color="orange" onClick={ this.toggleDie('orange') } />
           <Die pips={ this.state.yellowDie } disabled={ this.state.yellowDisabled } color="yellow" onClick={ this.toggleDie('yellow') } />
           <Die pips={ this.state.purpleDie } disabled={ this.state.purpleDisabled } color="purple" onClick={ this.toggleDie('purple') } />
-          { this.state.total }
+          { !this.state.rolling && this.state.total }
         </div>
         <div>
-          <button onClick={ this.rollDice }>
-            Roll!
+          <button onClick={ this.rollDice } disabled={ this.state.rolling }>
+            { !this.state.rolling ? 'Roll!' : 'Rolling!' }
           </button>
         </div>
       </div>

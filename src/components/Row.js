@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Cell from './Cell';
+import ScoresModel from './../data/models/Scores';
 
 import range from 'lodash/range';
 import classnames from 'classnames';
@@ -13,10 +14,11 @@ class Row extends Component {
     hiddenCells: PropTypes.array.isRequired,
     bonusCells: PropTypes.array.isRequired,
     updateScore: PropTypes.func.isRequired,
+    scores: PropTypes.instanceOf(ScoresModel).isRequired,
   };
 
-  updateScore = column => value => {
-    return this.props.updateScore(column, value);
+  updateScore = column => () => {
+    return this.props.updateScore(column);
   };
 
   render() {
@@ -29,6 +31,7 @@ class Row extends Component {
           bonus={ this.props.bonusCells.includes(column)}
           key={`${this.props.row}-${column}`}
           updateScore={ this.updateScore(column) }
+          value={ this.props.scores.getRow(this.props.row).get(column) }
         />) }
       </div>
     )

@@ -10,24 +10,30 @@ class Cell extends PureComponent {
     hidden: PropTypes.bool.isRequired,
     bonus: PropTypes.bool.isRequired,
     updateScore: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     hidden: false,
     bonus: false,
+    disabled: false
   };
 
-  handleChange = (event) => {
-    this.props.updateScore(event.target.value);
+  handleChange = () => {
+    if (this.disabled) {
+      return;
+    }
+
+    return this.props.updateScore();
   };
 
   render() {
-    const { value, row, column, hidden, bonus } = this.props;
+    const { value, hidden, bonus, disabled } = this.props;
 
     return (
       <div className={ classnames('cell-container')}>
-        <div className={ classnames('cell', { 'hidden': hidden }, { 'bonus': bonus })}>
-          <input type="text" value={ value } name={ `${row}-${column}` } onChange={ this.handleChange } />
+        <div className={ classnames('cell', { 'hidden': hidden }, { 'bonus': bonus }, {'disabled': disabled})} onClick={ this.handleChange }>
+          { value }
         </div>
       </div>
     )
