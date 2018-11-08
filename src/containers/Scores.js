@@ -2,78 +2,30 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Row from './../components/Row';
-import Die from './../components/Die';
 import ScoresModel from './../data/models/Scores';
 
-class Scores extends Component {
+import classnames from 'classnames';
 
-  state = {
-    orangeDie: 1,
-    yellowDie: 1,
-    purpleDie: 1,
-    total: 3,
-    orangeDisabled: false,
-    yellowDisabled: false,
-    purpleDisabled: false,
-    rolling: null,
-  };
+class Scores extends Component {
 
   static propTypes = {
     scores: PropTypes.instanceOf(ScoresModel),
     scoreId: PropTypes.string.isRequired,
     updateScore: PropTypes.func.isRequired,
+    diceRoll: PropTypes.number,
+    activeDice: PropTypes.array,
   };
 
   updateScore = row => column => {
-    if (!this.props.scores.isAvailable(row, column, this.state.total)) {
+    if (!this.props.scores.isAvailable(row, column, this.props.diceRoll)) {
       return;
     }
 
-    if (this.state[`${row}Disabled`]) {
+    if (!this.props.activeDice.includes(row)) {
       return;
     }
 
-    return this.props.updateScore(this.props.scores.set('values', this.props.scores.values.setIn([row, column], this.state.total)));
-  };
-
-  rollDice = () => {
-    this.setState({ rolling: true});
-
-    const rollingDice = setInterval(() => {
-      const state = {};
-
-      if (!this.state.orangeDisabled) {
-        state.orangeDie =  Math.floor(Math.random() * 6) + 1;
-        state.total += state.orangeDie;
-      }
-
-      if (!this.state.yellowDisabled) {
-        state.yellowDie =  Math.floor(Math.random() * 6) + 1;
-        state.total += state.yellowDie;
-      }
-
-      if (!this.state.purpleDisabled) {
-        state.purpleDie =  Math.floor(Math.random() * 6) + 1;
-        state.total += state.purpleDie;
-      }
-
-      this.setState(state);
-    }, 200);
-
-    setTimeout(() => {
-      clearInterval(rollingDice);
-      this.setState(prevState => ({
-        rolling: null,
-        total: prevState.orangeDie + prevState.yellowDie + prevState.purpleDie,
-      }));
-    }, 1250);
-
-  };
-
-  toggleDie = color => () => {
-    return this.setState(prevState => ({
-      [`${color}Disabled`]: !prevState[`${color}Disabled`],
-    }))
+    return this.props.updateScore(this.props.scores.set('values', this.props.scores.values.setIn([row, column], this.props.diceRoll)));
   };
 
   render() {
@@ -103,16 +55,19 @@ class Scores extends Component {
           updateScore={ this.updateScore('purple')}
           scores={ this.props.scores }
         /><br/>
+
+
         <div>
-          <Die pips={ this.state.orangeDie } disabled={ this.state.orangeDisabled } color="orange" onClick={ this.toggleDie('orange') } />
-          <Die pips={ this.state.yellowDie } disabled={ this.state.yellowDisabled } color="yellow" onClick={ this.toggleDie('yellow') } />
-          <Die pips={ this.state.purpleDie } disabled={ this.state.purpleDisabled } color="purple" onClick={ this.toggleDie('purple') } />
-          { !this.state.rolling && this.state.total }
-        </div>
-        <div>
-          <button onClick={ this.rollDice } disabled={ this.state.rolling }>
-            { !this.state.rolling ? 'Roll!' : 'Rolling!' }
-          </button>
+          <h2>Final Score:</h2>
+          <div className="score-totals-container">
+            { ScoresModel.ROW_COLORS.map(color => <div key={ color } className={ classnames('row-score', color) }>{ this.props.scores.calculateRowScore(color) }</div>) }
+            <div className="operator">+</div>
+            { this.props.scores.getBonusScores().map((bonusScore, index) => <div key={ index } className="bonus-score">{ bonusScore }</div>)}
+            <div className="operator">-</div>
+            <div className="row-score">{ this.props.scores.getPenaltyScore() }</div>
+            <div className="operator">=</div>
+            <div className="row-score">{ this.props.scores.calculateTotalScore() }</div>
+          </div>
         </div>
       </div>
     )

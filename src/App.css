@@ -56,22 +56,6 @@
   width: 32px
 }
 
-.cell input {
-  height: 20px;
-  width: 20px;
-  border: none;
-  position: relative;
-  top: 5px;
-  left: 5px;
-  padding: 0;
-  text-align: center;
-  background: transparent;
-}
-
-.cell input:focus {
-  outline: none;
-}
-
 .die {
   width: 60px;
   height: 60px;
@@ -95,4 +79,52 @@
 
 .die.yellow.disabled {
   opacity: .4;
+}
+
+.score-totals-container {
+  display: flex;
+}
+
+.score-totals-container > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+  text-align: center;
+}
+
+.row-score {
+  border: 1px solid #666;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.row-score.orange {
+  border-color: #ce9781;
+  background: #fdf6f2;
+}
+
+.row-score.yellow {
+  border-color: #f5dd35;
+  background: #fefdf1;
+}
+
+.row-score-.purple {
+  border-color: #f5efff;
+  background: #f5efff;
+}
+
+.bonus-score {
+  background: url("pentagon.svg");
+  background-size: 32px 30px;
+  border-radius: 0;
+  border: none;
+  height: 30px;
+  width: 32px
+}
+
+.operator {
+  height: 30px;
+  width: 30px;
 }
