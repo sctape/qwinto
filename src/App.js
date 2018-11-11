@@ -8,7 +8,7 @@ import Die from './components/Die';
 import ScoresModel from './data/models/Scores';
 import { updateScore } from './data/actions/scores';
 
-import './App.css';
+import './App.scss';
 
 class App extends Component {
 

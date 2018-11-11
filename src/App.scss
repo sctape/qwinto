@@ -1,0 +1,176 @@
+.scores {
+  width: 445px;
+  padding: 15px;
+  border: 1px solid #000;
+  margin: 10px;
+}
+
+.row {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  margin-bottom: 5px;
+  border: solid 1px;
+  border-radius: 5px;
+  position: relative;
+
+  &.orange {
+    left: 74px;
+    background-color: #e56329;
+  }
+
+  &.yellow {
+    left: 37px;
+    background-color: #f5dd32;
+  }
+
+  &.purple {
+    background-color: #5a3787;
+  }
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.cell-container {
+  border-right: 1px solid;
+  padding: 2px;
+  width: 32px;
+  height: 32px;
+
+  &:last-child {
+    border: none;
+  }
+
+  .cell {
+    border: 1px solid #666;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.bonus {
+      background: url("pentagon.svg");
+      background-size: 32px 30px;
+      border-radius: 0;
+      border: none;
+      height: 30px;
+      width: 32px
+    }
+  }
+
+
+}
+
+.die {
+  width: 60px;
+  height: 60px;
+
+  &.orange rect {
+    fill: #e56329;
+  }
+
+  &.yellow rect {
+    fill: #f5dd32;
+  }
+
+  &.purple rect {
+    fill: #5a3787;
+  }
+
+  &.disabled {
+    opacity: .3;
+
+    &.yellow {
+      opacity: .4;
+    }
+  }
+}
+
+.penalty-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
+  margin: auto;
+
+  .penalty {
+    border: 1px solid #000;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+  }
+}
+
+.scoring-section {
+  background: #999;
+  margin: 10px -15px -15px;
+  padding: 5px;
+
+  h4 {
+    font-size: 16px;
+    color: #fff;
+    margin: 0 0 5px;
+  }
+
+  .score-totals-container {
+    display: flex;
+
+    &> div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 2px;
+      text-align: center;
+    }
+
+    .row-score {
+      border: 1px solid #000;
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      background: #fff;
+
+      &.orange {
+        border-color: #ce9781;
+        background: #fdf6f2;
+      }
+
+      &.yellow {
+        border-color: #f5dd35;
+        background: #fefdf1;
+      }
+
+      &.purple {
+        border-color: #5c3988;
+        background: #f5efff;
+      }
+    }
+
+    .bonus-score {
+      background: url("pentagon.svg");
+      background-size: 32px 30px;
+      border-radius: 0;
+      border: none;
+      height: 30px;
+      width: 32px
+    }
+
+    .operator {
+      height: 30px;
+      width: 30px;
+      font-size: 16px;
+      color: #fff;
+      font-weight: bold;
+    }
+  }
+}
+
+

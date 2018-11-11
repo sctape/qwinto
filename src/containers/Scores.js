@@ -5,6 +5,7 @@ import Row from './../components/Row';
 import ScoresModel from './../data/models/Scores';
 
 import classnames from 'classnames';
+import range from 'lodash/range';
 
 class Scores extends Component {
 
@@ -28,6 +29,22 @@ class Scores extends Component {
     return this.props.updateScore(this.props.scores.set('values', this.props.scores.values.setIn([row, column], this.props.diceRoll)));
   };
 
+  addPenalty = () => {
+    const penaltyCount = this.props.scores.penalties;
+
+    if (penaltyCount > 3) {
+      return;
+    }
+
+    return this.props.updateScore(this.props.scores.set('penalties', penaltyCount + 1));
+  };
+
+  renderPenalty = index => {
+    const checked = this.props.scores.penalties > index;
+
+    return <div className="penalty" key={ index } onClick={ this.addPenalty }>{ checked && 'x' }</div>
+  };
+
   render() {
     return (
       <div className="scores">
@@ -38,7 +55,7 @@ class Scores extends Component {
           bonusCells={ [3, 7] }
           updateScore={ this.updateScore('orange')}
           scores={ this.props.scores }
-        /><br/>
+        />
         <Row
           row="yellow"
           cellStartIndex={ 1 }
@@ -46,7 +63,7 @@ class Scores extends Component {
           bonusCells={ [8] }
           updateScore={ this.updateScore('yellow')}
           scores={ this.props.scores }
-        /><br/>
+        />
         <Row
           row="purple"
           cellStartIndex={ 0 }
@@ -54,11 +71,12 @@ class Scores extends Component {
           bonusCells={ [2, 9] }
           updateScore={ this.updateScore('purple')}
           scores={ this.props.scores }
-        /><br/>
-
-
-        <div>
-          <h2>Final Score:</h2>
+        />
+        <div className="penalty-container">
+          { range(4).map(index => this.renderPenalty(index)) }
+        </div>
+        <div className="scoring-section">
+          <h4>Final Score:</h4>
           <div className="score-totals-container">
             { ScoresModel.ROW_COLORS.map(color => <div key={ color } className={ classnames('row-score', color) }>{ this.props.scores.calculateRowScore(color) }</div>) }
             <div className="operator">+</div>
