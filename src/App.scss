@@ -3,6 +3,22 @@
   padding: 15px;
   border: 1px solid #000;
   margin: 10px;
+
+  &.active {
+    box-shadow: 0 0 10px 5px cornflowerblue;
+  }
+
+  &.disabled {
+    opacity: .5;
+  }
+
+  h4 {
+    margin: 0 0 10px;
+  }
+
+  .finish-turn {
+    float: right;
+  }
 }
 
 .row {

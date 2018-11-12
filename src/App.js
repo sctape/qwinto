@@ -7,6 +7,7 @@ import Scores from './containers/Scores';
 import Die from './components/Die';
 import ScoresModel from './data/models/Scores';
 import { updateScore } from './data/actions/scores';
+import User from './data/models/User';
 
 import './App.scss';
 
@@ -21,20 +22,19 @@ class App extends Component {
     yellowActive: true,
     purpleActive: true,
     rolling: false,
+    rollCount: 0,
+    players: [new User({scoreId: 'abc123', name: 'Sam'}), new User({scoreId: 'def456', name: 'Jess'}) ],
+    activePlayer: 0,
+    secondaryTurn: false,
   };
 
   static propTypes = {
     scores: PropTypes.instanceOf(ScoresModel),
-    scoreId: PropTypes.string.isRequired,
     updateScore: PropTypes.func.isRequired,
   };
 
-  static defaultProps = {
-    scoreId: 'abc123',
-  };
-
   rollDice = () => {
-    this.setState({ rolling: true});
+    this.setState( prevState => ({ rolling: true, rollCount: prevState.rollCount + 1 }));
 
     const rollingDice = setInterval(() => {
       const state = {};
@@ -86,16 +86,30 @@ class App extends Component {
     return activeDice;
   };
 
+  advanceTurn = () => {
+    if (this.state.secondaryTurn) {
+      return this.setState(prevState => ({
+        activePlayer: prevState.activePlayer + 2 === prevState.players.length ? 0 : prevState.activePlayer + 1,
+        secondaryTurn: false,
+      }));
+    }
+
+    return this.setState({ secondaryTurn: true });
+  };
+
   render() {
     return (
       <div>
-        <Scores
-          scores={ this.props.scores || new ScoresModel({id: 'abc123'}) }
-          scoreId={ this.props.scoreId }
+        { this.state.players.map((player, index) => <Scores
+          user={ player }
           updateScore={ this.props.updateScore }
+          scores={ this.props.scores.get(player.scoreId) || new ScoresModel({id: player.scoreId}) }
           diceRoll={ this.state.total }
           activeDice={ this.getActiveDice() }
-        />
+          activePlayer={ index === this.state.activePlayer || (this.state.secondaryTurn && index !== this.state.activePlayer) }
+          disabled={ index !== this.state.activePlayer || this.state.secondaryTurn }
+          onScoreSubmit={ this.advanceTurn }
+        />) }
         <div>
           <Die pips={ this.state.orangeDie } disabled={ !this.state.orangeActive } color="orange" onClick={ this.toggleDie('orange') } />
           <Die pips={ this.state.yellowDie } disabled={ !this.state.yellowActive } color="yellow" onClick={ this.toggleDie('yellow') } />
@@ -103,7 +117,7 @@ class App extends Component {
           { !this.state.rolling && this.state.total }
         </div>
         <div>
-          <button onClick={ this.rollDice } disabled={ this.state.rolling }>
+          <button onClick={ this.rollDice } disabled={ this.state.rolling || this.state.rollCount === 2 }>
             { !this.state.rolling ? 'Roll!' : 'Rolling!' }
           </button>
         </div>
@@ -114,7 +128,7 @@ class App extends Component {
 
 export default connect(
   state => ({
-    scores: state.scores.items.get('abc123'),
+    scores: state.scores.items,
   }),
   dispatch => bindActionCreators({
     updateScore,
